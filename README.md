@@ -28,7 +28,7 @@ software dependencies
 the following software packages must be installed as prerequisites for data management:
 - postgresql
 - perl
-- perl modules:
+- required perl modules
         Data::Dumper
         Data::Validate::Domain
         Data::Validate::IP
