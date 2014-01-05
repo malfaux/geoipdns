@@ -1,0 +1,19 @@
+Quadratic probing is a scheme in computer programming for resolving collisions in hash tables.
+
+Quadratic probing operates by taking the original hash value and adding successive values of an arbitrary quadratic polynomial to the starting value. This algorithm is used in open-addressed hash tables. Quadratic probing provides good memory caching because it preserves some locality of reference; however, linear probing has greater locality and, thus, better cache performance. Quadratic probing better avoids the clustering problem that can occur with linear probing, although it is not immune.
+
+Quadratic probing is used in the Berkeley Fast File System to allocate free blocks. The allocation routine chooses a new cylinder-group when the current is nearly full using quadratic probing, because of the speed it shows in finding unused cylinder-groups.
+Quadratic Probing Algorithm
+
+Let h(k) be a hash function that maps an element k to an integer in [0,m − 1], where m is the size of the table.
+
+Let the ith probe position for a value k be given by the function h(k,i) = (h(k) + c1i + c2i2)(mod m), where c_2 \neq 0. If c2 = 0, then h(k,i) degrades to a linear probe. For a given hash table, the values of c1 and c2 remain constant.
+
+Example: If h(k,i) = (h(k) + i + i2)(mod m), then the probe sequence will be h(k),h(k) + 2,h(k) + 6,...
+
+For m = 2n, a good choice for the constants are c1 = c2 = 1/2, as the values h(k,i) for i in [0,m − 1] are all distinct.[1] This leads to a probe sequence of h(k),h(k) + 1,h(k) + 3,h(k) + 6,... where the values increase by 1,2,3,....
+
+For prime m > 2, most choices of c1 and c2 will make h(k,i) distinct for i in [0,(m − 1) / 2]. Such choices include c1 = c2 = 1/2, c1 = c2 = 1, and c1 = 0,c2 = 1. Because there are only about m/2 distinct probes for a given element, it is difficult to guarantee that insertions will succeed when the load factor is > 1/2.
+Notes
+
+   1. ^ Proof: assume there exist i,j such that i,j in [0,m − 1] and (i+i^2)/2 = (j+j^2)/2 mod m. Then i+i^2 = j+j^2 mod 2m, i^2-j^2 + i-j = 0 mod 2m, (i-j)(i+j) + (i-j) = 0 mod 2m, and (i-j)(i+j+1) = 0 mod 2m. Since 2m is a power of 2, and only one of the two factors can be even, we must have i-j = 0 mod 2m or i+j+1 = 0 mod 2m. The latter is not possible with i,j in [0,m − 1], and the former implies that i=j.

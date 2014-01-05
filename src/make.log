@@ -1,0 +1,363 @@
+( cat warn-auto.sh; \
+	echo 'main="$1"; shift'; \
+	echo exec "`head -1 conf-ld`" \
+	'-o "$main" "$main".o ${1+"$@"}' \
+	) > load
+chmod 755 load
+( cat warn-auto.sh; \
+	echo exec "`head -1 conf-cc`" '-c ${1+"$@"}' \
+	) > compile
+chmod 755 compile
+cat warn-auto.sh choose.sh \
+	| sed s}HOME}"`head -1 conf-home`"}g \
+	> choose
+chmod 755 choose
+./choose clr trypoll iopause.h1 iopause.h2 > iopause.h
+./choose clr tryulong64 uint64.h1 uint64.h2 > uint64.h
+./compile vdnsd.c
+( ( ./compile tryulong32.c && ./load tryulong32 && \
+	./tryulong32 ) >/dev/null 2>&1 \
+	&& cat uint32.h2 || cat uint32.h1 ) > uint32.h
+rm -f tryulong32.o tryulong32
+./compile server.c
+server.c: In function 'main':
+server.c:95: warning: pointer targets in passing argument 2 of 'ip4_scan' differ in signedness
+ip4.h:4: note: expected 'unsigned char *' but argument is of type 'char *'
+./compile droproot.c
+./compile tdlookup.c
+In file included from tdlookup.c:25:
+evq.h:12:2: warning: #warning "kernel version OK"
+tdlookup.c: In function 'doit':
+tdlookup.c:160: warning: suggest parentheses around assignment used as truth value
+tdlookup.c:186: warning: suggest parentheses around assignment used as truth value
+tdlookup.c:244: warning: suggest parentheses around assignment used as truth value
+tdlookup.c:259: warning: suggest parentheses around assignment used as truth value
+tdlookup.c:284: warning: suggest parentheses around assignment used as truth value
+tdlookup.c: In function 'dataini':
+tdlookup.c:385: warning: unused variable 'rc'
+tdlookup.c: In function 'respond':
+tdlookup.c:485: warning: pointer targets in passing argument 2 of 'ipdb_get' differ in signedness
+ipdb.h:15: note: expected 'unsigned char *' but argument is of type 'char *'
+./compile fqdn_read.c
+fqdn_read.c: In function 'makeit_wildcard':
+fqdn_read.c:9: warning: initialization discards qualifiers from pointer target type
+fqdn_read.c: In function 'fqdn_read':
+fqdn_read.c:37: warning: assignment from incompatible pointer type
+./compile response.c
+./compile qlog.c
+./compile logger.c
+logger.c:60: warning: 'st_err' defined but not used
+logger.c:61: warning: 'st_out' defined but not used
+./compile ip4_num.c
+./compile ip4_deaggregate.c
+ip4_deaggregate.c: In function 'ip4_deaggregate2':
+ip4_deaggregate.c:12: warning: unused variable 'i'
+ip4_deaggregate.c: In function 'ip4_deaggregate':
+ip4_deaggregate.c:41: warning: unused variable 'i'
+./compile ipdb.c
+ipdb.c: In function 'ipdb_key4build':
+ipdb.c:37: warning: pointer targets in passing argument 1 of 'uint32_pack' differ in signedness
+uint32.h:6: note: expected 'char *' but argument is of type 'unsigned char *'
+ipdb.c:38: warning: pointer targets in passing argument 1 of 'uint32_pack' differ in signedness
+uint32.h:6: note: expected 'char *' but argument is of type 'unsigned char *'
+ipdb.c:34: warning: unused variable 'netmask'
+ipdb.c:33: warning: unused variable 'i'
+ipdb.c: In function 'ipdb_key4lookup':
+ipdb.c:59: warning: pointer targets in passing argument 1 of 'uint32_pack' differ in signedness
+uint32.h:6: note: expected 'char *' but argument is of type 'unsigned char *'
+ipdb.c:60: warning: pointer targets in passing argument 1 of 'uint32_pack' differ in signedness
+uint32.h:6: note: expected 'char *' but argument is of type 'unsigned char *'
+ipdb.c: In function 'ipdb_get':
+ipdb.c:153: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:154: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:155: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:156: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:157: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:158: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:159: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:160: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:161: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:162: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:163: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:164: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:165: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:166: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:167: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:168: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:169: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:170: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:171: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:172: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:173: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:174: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:175: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:176: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:177: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:178: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:179: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:180: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:181: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:182: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:183: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+ipdb.c:184: warning: pointer targets in passing argument 2 of 'cdb_find' differ in signedness
+cdb.h:38: note: expected 'const char *' but argument is of type 'unsigned char *'
+./compile chkshsgr.c
+chkshsgr.c: In function 'main':
+chkshsgr.c:8: warning: implicit declaration of function 'getgroups'
+chkshsgr.c:8: warning: implicit declaration of function 'setgroups'
+./load chkshsgr 
+./chkshsgr || ( cat warn-shsgr; exit 1 )
+./choose clr tryshsgr hasshsgr.h1 hasshsgr.h2 > hasshsgr.h
+./compile prot.c
+prot.c: In function 'prot_gid':
+prot.c:11: warning: implicit declaration of function 'setgroups'
+prot.c:13: warning: implicit declaration of function 'setgid'
+prot.c: In function 'prot_uid':
+prot.c:18: warning: implicit declaration of function 'setuid'
+( cat warn-auto.sh; \
+	echo CC=\'`head -1 conf-cc`\'; \
+	echo LD=\'`head -1 conf-ld`\'; \
+	cat find-systype.sh; \
+	) | sh > systype
+( cat warn-auto.sh; \
+	echo 'main="$1"; shift'; \
+	echo 'rm -f "$main"'; \
+	echo 'ar cr "$main" ${1+"$@"}'; \
+	case "`cat systype`" in \
+	sunos-5.*) ;; \
+	unix_sv*) ;; \
+	irix64-*) ;; \
+	irix-*) ;; \
+	dgux-*) ;; \
+	hp-ux-*) ;; \
+	sco*) ;; \
+	*) echo 'ranlib "$main"' ;; \
+	esac \
+	) > makelib
+chmod 755 makelib
+./compile dns_dfd.c
+./compile dns_domain.c
+dns_domain.c: In function 'dns_domain_length':
+dns_domain.c:13: warning: suggest parentheses around assignment used as truth value
+./compile dns_dtda.c
+./compile dns_ip.c
+./compile dns_ipq.c
+./compile dns_mx.c
+./compile dns_name.c
+./compile dns_nd.c
+./compile dns_packet.c
+./compile dns_random.c
+./compile dns_rcip.c
+dns_rcip.c: In function 'init':
+dns_rcip.c:23: warning: pointer targets in passing argument 2 of 'ip4_scan' differ in signedness
+ip4.h:4: note: expected 'unsigned char *' but argument is of type 'char *'
+dns_rcip.c:43: warning: pointer targets in passing argument 2 of 'ip4_scan' differ in signedness
+ip4.h:4: note: expected 'unsigned char *' but argument is of type 'char *'
+./compile dns_rcrw.c
+./compile dns_resolve.c
+./compile dns_sortip.c
+./compile dns_transmit.c
+./compile dns_txt.c
+./makelib dns.a dns_dfd.o dns_domain.o dns_dtda.o dns_ip.o \
+	dns_ipq.o dns_mx.o dns_name.o dns_nd.o dns_packet.o \
+	dns_random.o dns_rcip.o dns_rcrw.o dns_resolve.o \
+	dns_sortip.o dns_transmit.o dns_txt.o
+./compile tai_add.c
+./compile tai_now.c
+./compile tai_pack.c
+./compile tai_sub.c
+./compile tai_uint.c
+./compile tai_unpack.c
+./compile taia_add.c
+./compile taia_approx.c
+./compile taia_frac.c
+./compile taia_less.c
+./compile taia_now.c
+./compile taia_pack.c
+./compile taia_sub.c
+./compile taia_tai.c
+./compile taia_uint.c
+./makelib libtai.a tai_add.o tai_now.o tai_pack.o \
+	tai_sub.o tai_uint.o tai_unpack.o taia_add.o taia_approx.o \
+	taia_frac.o taia_less.o taia_now.o taia_pack.o taia_sub.o \
+	taia_tai.o taia_uint.o
+./compile env.c
+./makelib env.a env.o
+./compile cdb.c
+./compile cdb_hash.c
+cdb_hash.c:25:2: warning: #warning "USE_SFHASH"
+./compile cdb_make.c
+./makelib cdb.a cdb.o cdb_hash.o cdb_make.o
+./compile alloc.c
+./compile alloc_re.c
+./compile getln.c
+./compile getln2.c
+./compile stralloc_cat.c
+./compile stralloc_catb.c
+./compile stralloc_cats.c
+./compile stralloc_copy.c
+./compile stralloc_eady.c
+./compile stralloc_num.c
+./compile stralloc_opyb.c
+./compile stralloc_opys.c
+./compile stralloc_pend.c
+./makelib alloc.a alloc.o alloc_re.o getln.o getln2.o \
+	stralloc_cat.o stralloc_catb.o stralloc_cats.o \
+	stralloc_copy.o stralloc_eady.o stralloc_num.o \
+	stralloc_opyb.o stralloc_opys.o stralloc_pend.o
+./compile buffer.c
+./compile buffer_1.c
+./compile buffer_2.c
+./compile buffer_copy.c
+./compile buffer_get.c
+./compile buffer_put.c
+./compile strerr_die.c
+./compile strerr_sys.c
+./makelib buffer.a buffer.o buffer_1.o buffer_2.o \
+	buffer_copy.o buffer_get.o buffer_put.o strerr_die.o \
+	strerr_sys.o
+./compile buffer_read.c
+./compile buffer_write.c
+./compile error.c
+./compile error_str.c
+./compile ndelay_off.c
+./compile ndelay_on.c
+./compile open_read.c
+./compile open_trunc.c
+./compile openreadclose.c
+./compile readclose.c
+./compile seek_set.c
+seek_set.c: In function 'seek_set':
+seek_set.c:7: warning: implicit declaration of function 'lseek'
+./compile socket_accept.c
+socket_accept.c: In function 'socket_accept4':
+socket_accept.c:14: warning: pointer targets in passing argument 3 of 'accept' differ in signedness
+/usr/include/sys/socket.h:214: note: expected 'socklen_t * __restrict__' but argument is of type 'int *'
+./compile socket_bind.c
+./compile socket_conn.c
+socket_conn.c: In function 'socket_connected':
+socket_conn.c:28: warning: pointer targets in passing argument 3 of 'getpeername' differ in signedness
+/usr/include/sys/socket.h:133: note: expected 'socklen_t * __restrict__' but argument is of type 'int *'
+./compile socket_listen.c
+./compile socket_recv.c
+socket_recv.c: In function 'socket_recv4':
+socket_recv.c:14: warning: pointer targets in passing argument 6 of 'recvfrom' differ in signedness
+/usr/include/sys/socket.h:166: note: expected 'socklen_t * __restrict__' but argument is of type 'int *'
+./compile socket_send.c
+./compile socket_tcp.c
+./compile socket_udp.c
+./makelib unix.a buffer_read.o buffer_write.o error.o \
+	error_str.o ndelay_off.o ndelay_on.o open_read.o \
+	open_trunc.o openreadclose.o readclose.o seek_set.o \
+	socket_accept.o socket_bind.o socket_conn.o socket_listen.o \
+	socket_recv.o socket_send.o socket_tcp.o socket_udp.o
+./compile byte_chr.c
+./compile byte_copy.c
+./compile byte_cr.c
+./compile byte_diff.c
+./compile byte_zero.c
+./compile case_diffb.c
+./compile case_diffs.c
+./compile case_lowerb.c
+./compile fmt_ulong.c
+./compile ip4_fmt.c
+./compile ip4_scan.c
+./compile scan_ulong.c
+./compile scan_ushort.c
+./compile str_chr.c
+./compile str_diff.c
+./compile str_len.c
+./compile str_rchr.c
+./compile str_start.c
+./compile uint16_pack.c
+./compile uint16_unpack.c
+./compile uint32_pack.c
+./compile uint32_unpack.c
+./compile uint64_pack.c
+./compile uint64_unpack.c
+./makelib byte.a byte_chr.o byte_copy.o byte_cr.o \
+	byte_diff.o byte_zero.o case_diffb.o case_diffs.o \
+	case_lowerb.o fmt_ulong.o ip4_fmt.o ip4_scan.o scan_ushort.o scan_ulong.o \
+	str_chr.o str_diff.o str_len.o str_rchr.o str_start.o \
+	uint16_pack.o uint16_unpack.o uint32_pack.o uint32_unpack.o uint64_unpack.o uint64_pack.o
+( ( ./compile trylsock.c && \
+	./load trylsock -lsocket -lnsl ) >/dev/null 2>&1 \
+	&& echo -lsocket -lnsl || exit 0 ) > socket.lib
+rm -f trylsock.o trylsock
+./load vdnsd server.o droproot.o tdlookup.o fqdn_read.o response.o \
+	ip4_num.o ip4_deaggregate.o ipdb.o logger.o \
+	qlog.o prot.o dns.a libtai.a env.a cdb.a alloc.a buffer.a \
+	unix.a byte.a  `cat socket.lib`
+./compile vdnsdb.c
+vdnsdb.c: In function 'main':
+vdnsdb.c:336: warning: pointer targets in passing argument 2 of 'ip4_scan' differ in signedness
+ip4.h:4: note: expected 'unsigned char *' but argument is of type 'char *'
+vdnsdb.c:339: warning: pointer targets in passing argument 2 of 'ip4_num' differ in signedness
+ip4.h:7: note: expected 'unsigned char *' but argument is of type 'char *'
+vdnsdb.c:348: warning: pointer targets in passing argument 2 of 'cdb_make_add' differ in signedness
+cdb_make.h:36: note: expected 'const char *' but argument is of type 'unsigned char *'
+vdnsdb.c:361: warning: passing argument 2 of 'uint32_unpack_big' from incompatible pointer type
+uint32.h:9: note: expected 'uint32 *' but argument is of type 'long unsigned int *'
+vdnsdb.c:364: warning: passing argument 2 of 'uint32_unpack_big' from incompatible pointer type
+uint32.h:9: note: expected 'uint32 *' but argument is of type 'long unsigned int *'
+vdnsdb.c:367: warning: passing argument 2 of 'uint32_unpack_big' from incompatible pointer type
+uint32.h:9: note: expected 'uint32 *' but argument is of type 'long unsigned int *'
+vdnsdb.c:370: warning: passing argument 2 of 'uint32_unpack_big' from incompatible pointer type
+uint32.h:9: note: expected 'uint32 *' but argument is of type 'long unsigned int *'
+vdnsdb.c:373: warning: passing argument 2 of 'uint32_unpack_big' from incompatible pointer type
+uint32.h:9: note: expected 'uint32 *' but argument is of type 'long unsigned int *'
+vdnsdb.c:425: warning: pointer targets in passing argument 2 of 'ip4_scan' differ in signedness
+ip4.h:4: note: expected 'unsigned char *' but argument is of type 'char *'
+vdnsdb.c:445: warning: pointer targets in passing argument 2 of 'ip4_scan' differ in signedness
+ip4.h:4: note: expected 'unsigned char *' but argument is of type 'char *'
+vdnsdb.c:489: warning: pointer targets in passing argument 2 of 'ip4_scan' differ in signedness
+ip4.h:4: note: expected 'unsigned char *' but argument is of type 'char *'
+./load vdnsdb ip4_deaggregate.o ip4_num.o fqdn_read.o ipdb.o logger.o cdb.a dns.a alloc.a buffer.a unix.a \
+	byte.a 
+./compile install.c
+./compile hier.c
+hier.c: In function 'hier':
+hier.c:6: warning: implicit declaration of function 'h'
+hier.c:7: warning: implicit declaration of function 'd'
+hier.c:8: warning: implicit declaration of function 'c'
+./compile auto-str.c
+auto-str.c:7: warning: conflicting types for built-in function 'puts'
+auto-str.c: In function 'main':
+auto-str.c:28: warning: suggest parentheses around assignment used as truth value
+./load auto-str buffer.a unix.a byte.a 
+./auto-str auto_home `head -1 conf-home` > auto_home.c
+./compile auto_home.c
+./load install hier.o auto_home.o buffer.a unix.a byte.a 
+./compile instcheck.c
+./load instcheck hier.o auto_home.o buffer.a unix.a byte.a 
