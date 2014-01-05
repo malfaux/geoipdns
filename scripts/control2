@@ -1,0 +1,91 @@
+#!/bin/bash
+
+
+backends="10.4.41.1 10.4.41.2 10.4.41.3 10.4.41.0"
+backface=lo
+backnet="10.4.41.0/30"
+frontface="eth0"
+
+vdnsd="/root/dev/vdns-1.0r10/vdns/vdnsd"
+rootdir=/var/service/ns30-53001/root
+port=53
+buflen=$[1024*1024*128]
+ruid=nobody
+rgid=nobody
+if [ ! -d /var/log/vdnsd ] ; then mkdir /var/log/vdnsd ; fi
+#frontend=199.59.162.237/32
+#    IP=$backend PORT=53 ROOT=/var/service/ns30-53001/root BUFLEN=$[1024*1024*128] RGID=nobody RUID=nobody vdnsd >&/dev/null &
+
+[ -z $1 ] && exit 401
+[ -z $2 ] && exit 398
+frontend=$2
+
+function setup()
+{
+    pagesize=4096
+    unit_=256
+    MB=$[${unit_} * 4096] #aka MBytes: 1024*1024
+    minsize=256
+    pressure=384
+    maxsize=512
+    ifconfig eth0 txqueuelen $[${pagesize}*1]
+    sysctl -w net.core.netdev_max_backlog=$[${pagesize}*1]
+    sysctl -w net.core.rmem_max=$[$maxsize*$MB]
+    sysctl -w net.core.rmem_default=$[$minsize*$MB]
+    sysctl -w net.core.wmem_max=$[$maxsize*$MB]
+    sysctl -w net.core.wmem_default=$[$minsize*$MB]
+    sysctl -w net.ipv4.udp_mem="$[${minsize}*${MB}] $[${pressure}*${MB}] $[${maxsize}*${MB}]"
+    sysctl -w net.ipv4.udp_rmem_min=$[$minsize*$MB]
+    sysctl -w net.ipv4.udp_wmem_min=$[$minsize*$MB]
+    sysctl -w net.netfilter.nf_conntrack_udp_timeout=1
+    sysctl -w net.netfilter.nf_conntrack_events_retry_timeout=5
+    sysctl -w net.netfilter.nf_conntrack_max=$[32*1024*1024]
+    sysctl -w net.netfilter.nf_conntrack_expect_max=256
+    sysctl -w net.nf_conntrack_max=$[64*1024*1024]
+}
+case "$1" in
+    start)
+    setup
+    while read line ; do iptables -t raw $line ;done << EOT
+-N PREROUTING_DNS_PUB
+-A PREROUTING -d ${frontend}/32 -j PREROUTING_DNS_PUB 
+-A OUTPUT -s ${backnet} -o ${frontface} -j RAWSNAT  --to-source ${frontend}/32 
+-A PREROUTING_DNS_PUB -j NOTRACK 
+-A PREROUTING_DNS_PUB -j RAWDNAT  --to-destination ${backnet}
+EOT
+#-A PREROUTING_DNS_PUB -p udp -m udp --dport 53 -j RAWDNAT  --to-destination 10.4.41.0/30 
+#-A PREROUTING_DNS_PUB -p tcp -m tcp --dport 53 -j RAWDNAT  --to-destination 10.4.41.0/30 
+#daemonize [-a] -E name=value [-c directory] [-e stderr] [-o stdout] [-p pidfile] [-l lockfile] [-u user] [-v] path [arg] ...
+    for backend in ${backends}; do
+        ip -4 addr add ${backend}/32 dev ${backface}
+        #csh -DBUFLEN=$buflen -DPORT=$port -DIP=$backend -DROOT=$rootdir -DRGID=$rgid -DRUID=$ruid \
+        BUFLEN=$buflen PORT=$port IP=$backend ROOT=$rootdir RGID=$rgid RUID=$ruid csh \
+            -cf "$vdnsd >&/var/log/vdnsd/vdnsd-$backend.log &"
+        #daemonize -a -E BUFLEN=${buflen} -E PORT=$port -E IP=$backend -E ROOT=${rootdir} -E RGID=$rgid -E RUID=$ruid \
+        #    -e /var/log/vdnsd/vdnsd-$backend.err -o /var/log/vdnsd/vdnsd-$backend.out \
+        #    -l /var/lock/vdnsd-$backend -p /var/run/vdnsnd-$backend -u root -v  $vdnsd
+    done
+
+    
+    ;;
+    stop)
+    iptables -t raw -F
+    iptables -t mangle -F
+    iptables -t nat -F
+    iptables -t raw -X PREROUTING_DNS_PUB
+    ps ax |grep vdnsd | grep -v grep | cut -d' ' -f1 | xargs -n 1 kill -9
+    for backend in $backends ; do
+        ip -4 addr del ${backend}/32 dev ${backface}
+        if [ -f /var/run/vdnsd-$backend} ]; then kill -TERM `cat /var/run/vdnsd-$backend` ; fi
+        rm -f /var/run/vdnsd-$backend /var/lock/vdnsd-$backend
+    done
+    ;;
+    restart)
+    $0 stop $2
+    $0 start $2
+    ;;
+    *)
+    echo "error.usage : $0 stop|start|restart <frontend_ip>"
+    exit 1
+esac
+
