@@ -11,10 +11,16 @@ what has been modified over the years (I think I wrote it back in 2007 and conti
 - added multiprocessing support. geoipdns can be spawned many times (think one process per cpu) to increase the processing power. xtables is needed to properly route the requests but see more information below
 
 
-compilation notes
+installation notes
 =================
+some hints on building and installing geoipdns are required in order to make your life easier.
+
+compilation 
+-----------
 - by default, I assume to find inotify.h in sys/. If this isn't your case and your inotify support 
 comes with inotify-tools package, then you have to remove -DSYS_INOTIFY from conf-cc
 
-compilation flags
------------------
+using geoipdns
+=============
+
+
