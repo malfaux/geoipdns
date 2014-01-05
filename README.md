@@ -60,5 +60,15 @@ to set it up, run the following commands after postgresql is installed:
     #geoipdns-schema.sql is located in the scripts directory
     psql -U geoipdns geoipdns < geoipdns-schema.sql
 
+the following scripts are used to manage the data (the data will be edited in tinydns-data format):
+- gupdate : updates the geoip database and rebuilds the geoip configurations. usage: ./gupdate check=1 configs=all
+- gedit: edit the geoip mappings database
+- zdelete <zonename> : deletes a zone
+- zedit <zonename> : edit a zone from database
+- zimport <zonename> <file> : imports a tinydns-formatted file into database
+- zlist : lists the zones from database
+- znew <zonename> creates a new zone in database
+- zdump <zonename>: dumps a zone in tinydns data format from database
+- zexport : commits the data to dns servers
 
 
