@@ -1,0 +1,11 @@
+#!/usr/bin/perl
+
+BEGIN {
+	use lib '/sysami/.lib';
+}
+use veridns::zone;
+die "no zone name specified\n" unless defined $ARGV[0];
+foreach my $zn (@ARGV) {
+	print z_dump_rrs($zn);
+}
+exit(0);

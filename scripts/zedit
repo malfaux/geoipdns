@@ -1,0 +1,36 @@
+#!/usr/bin/perl
+
+BEGIN {
+use File::Basename;
+use lib dirname $0;
+}
+$ENV{DNS_ADMIN} = 'admin' unless defined $ENV{DNS_ADMIN};
+
+use sysami::util;
+use veridns::zone;
+use veridns::zone::db;
+die "no zone name specified\n" unless defined $ARGV[0];
+if (-f "$ENV{'TMPDIR'}/$ARGV[0].data") {
+	die "zone $ARGV[0] has garbage left in tempdir, or someone is already editing it\n";
+}
+my $buf = z_dump_rrs($ARGV[0]);
+die "no zone $ARGV[0] for user $ENV{'DNS_ADMIN'}\n" unless defined $buf and length $buf > 16;
+my $fh = undef;
+open ($fh,">","$ENV{'TMPDIR'}/$ARGV[0].data") or die "can't open temporary file "."$ENV{'TMPDIR'}/$ARGV[0].data"."\n";
+print $fh $buf;
+close($fh);
+my $rc = sysami::util::run_editor("$ENV{'TMPDIR'}/$ARGV[0].data");
+unless ($rc) {
+	unlink "$ENV{'TMPDIR'}/$ARGV[0].data";
+	die "error!!! did you want that?" unless $rc;
+}
+print "done editing, importing zone to database \n";
+my $dbh = vdb_open();
+die "no db\n" unless defined $dbh;
+my $user = get_user(dbh=>$dbh,username=>$ENV{'DNS_ADMIN'});
+die "no user" unless defined $user;
+z_delete($ARGV[0],$ENV{'DNS_ADMIN'},$dbh);
+z_import($ARGV[0],$user,"$ENV{'TMPDIR'}/$ARGV[0].data",$dbh);
+unlink "$ENV{'TMPDIR'}/$ARGV[0].data";
+exit(0);
+

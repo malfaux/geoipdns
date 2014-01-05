@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+BEGIN {
+    use File::Basename;
+    use lib dirname $0;
+}
+$|=1;
+use veridns::zone;
+use veridns::zone::db;
+$ENV{DNS_ADMIN}='ntc';
+my $dbh = vdb_open();
+unless ($dbh) {
+	print "can't connect to database!";
+	exit(0);
+}
+#die "no dbh\n" unless $dbh;
+z_export2($dbh);
+

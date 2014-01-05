@@ -1,0 +1,19 @@
+#!/usr/bin/perl
+BEGIN {
+use File::Basename;
+use lib dirname $0;
+}
+use veridns::zone;
+use veridns::zone::db;
+$ENV{DNS_ADMIN} = 'admin' unless defined $ENV{DNS_ADMIN};
+
+my $dbh = vdb_open();
+die "no dbh\n" unless $dbh;
+my $sth = $dbh->prepare("select zones.origin from users,zones where users.username=? and users.id=zones.uid");
+$sth->bind_param(1, $ENV{'DNS_ADMIN'});
+$sth->execute();
+while (my $row = $sth->fetchrow_hashref()) {
+		print $row->{origin},"\n";
+}
+$sth->finish();
+$dbh->disconnect();

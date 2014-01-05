@@ -1,0 +1,55 @@
+#!/usr/bin/perl
+
+BEGIN {
+    use File::Basename;
+    use lib dirname $0;
+}
+use veridns::db qw(:upd_);
+use veridns::cmdline_args;
+use Data::Dumper;
+use XML::Simple;
+$|=1;
+$ENV{DNS_ADMIN} = 'admin';
+
+my $ipdb = undef;
+my $opts = &parse_cmdline(@ARGV);
+my $chk_update = delete $opts->{check};
+if (defined $chk_update) {
+	print STDERR "checking for updates\n";
+	($ipdb,$flag) = &ipdb_update_master(%{$opts});
+} else {
+	$ipdb = &ipdb_get_handle();
+	if (!defined $ipdb) {
+		$ipdb = &ipdb_rebuild_master();
+		if (!$ipdb) { 
+			($ipdb,$flag) = &ipdb_update_master(%{$opts});
+			if (!$ipdb) { die "can't get an ipdb handle!\n"; }
+		}
+	}
+}
+exit(0) unless exists $opts->{configs};
+my @configs = ();
+print "configs: $opts->{configs}\n";
+if (defined $opts->{configs} and lc $opts->{configs} eq "all") {
+	print "paring all configs ...\n";
+	my $dh = undef;
+	opendir($dh,"$cf_userdir") or die "can't open data directory: $!\n";
+	#@dots = grep { /^\./ && -f "$some_dir/$_" } readdir($dh);
+	my @users = grep { !/^\./ && -d "$cf_userdir/$_" } readdir($dh);
+	closedir($dh);
+	foreach my $u (@users) {
+		print "push for user $u\n";
+		push @configs, "$cf_userdir/$u/ipmaps.xml" if -f "$cf_userdir/$u/ipmaps.xml";
+	}
+} else {
+	print "parse single config \n";
+	push @configs, "$cf_userdir/$ENV{DNS_ADMIN}/ipmaps.xml";
+}
+foreach my $xml (@configs) {
+	print "compile $xml\n";
+	#my $xml = XMLin($cfg,GroupTags=>{exceptions=>'exception'},ForceArray=>['exception','mapit']);
+	#die "noconfig\n" unless defined $xml;
+	#print Dumper($xml);
+	&ipdb_compile($xml,$ipdb);
+}
+

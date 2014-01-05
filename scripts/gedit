@@ -1,0 +1,62 @@
+#!/usr/bin/perl
+
+BEGIN {
+    use File::Basename;
+    use lib dirname $0;
+}
+use veridns::cfg qw/:cf_/;
+use sysami::util;
+use veridns::zone;
+use veridns::zone::db;
+use Digest::MD5;
+use veridns::db qw(:upd_);
+
+my $user = $ENV{'DNS_ADMIN'} // 'admin';
+if (! -d "$cf_userdir/$user") { die unless mkdir "$cf_userdir/$user"; }
+
+my $fh = undef;
+unless (-f "$cf_userdir/$user/ipmaps.xml") {
+my $newfh = undef;
+open($newfh,">","$cf_userdir/$user/ipmaps.xml") or die "can't create ipmaps.xml file: $!\n";
+print $newfh <<EOF
+<ipmaps user="$user" out="$cf_userdir/$user/loc.data">
+
+</ipmaps>
+EOF
+;
+}
+open ($fh,'<',"$cf_userdir/$user/ipmaps.xml") or die "can't open ipmaps.xml file: $!\n";
+open ($fhtemp,'>',"$cf_tmpdir/$user-ipmaps.xml") or die "can't open ipmaps temp file: $!\n";
+my $ctx = Digest::MD5->new();
+while (<$fh>) {
+	print $fhtemp $_;
+	$ctx->add($_);
+}
+close $fh;
+close $fhtemp;
+my $md5sum_orig = $ctx->hexdigest();
+
+my $rc = sysami::util::run_editor("$cf_tmpdir/$user-ipmaps.xml");
+unless ($rc) {
+	unlink("$cf_tmpdir/$user-ipmaps.xml");
+	die "error!!! did you want that?" unless $rc;
+}
+my $ctx2 = Digest::MD5->new();
+open ($fhtemp,'<',"$cf_tmpdir/$user-ipmaps.xml") or die "can't open ipmaps temp file: $!\n";
+while(<$fhtemp>) {
+	$ctx2->add($_);
+}
+close($fhtemp);
+
+my $md5sum_edit = $ctx2->hexdigest();
+if ($md5sum_orig != $md5sum_edit) {
+	print "ipmaps modified, updating configuration\n";
+	rename("$cf_tmpdir/$user-ipmaps.xml","$cf_userdir/$user/ipmaps.xml");
+	&ipdb_compile("$cf_userdir/$user/ipmaps.xml",ipdb_get_handle());
+} else {
+	print "ipmaps not modified, skipping configuration update\n";
+	unlink("$cf_tmpdir/$user-ipmaps.xml");
+    unlink("$cf_userdir/$user/ipmaps.xml");
+}
+exit(0);
+

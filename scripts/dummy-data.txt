@@ -1,0 +1,12 @@
+Zfw.io:a.dns.fw.io.:dns-admin.nox.twinbyte.com.::::::300
+&fw.io::a.dns.fw.io:300
+&fw.io::b.dns.fw.io:300
+&fw.io::c.dns.fw.io:300
+&fw.io::d.dns.fw.io:300
+&fw.io::e.dns.fw.io:300
++a.dns.fw.io:5.9.100.22:300
++b.dns.fw.io:80.241.218.197:300
++c.dns.fw.io:5.9.100.27:300
++d.dns.fw.io:5.9.100.28:300
++e.dns.fw.io:5.9.100.29:300
+
