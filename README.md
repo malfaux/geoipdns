@@ -71,4 +71,5 @@ the following scripts are used to manage the data (the data will be edited in ti
 - zdump <zonename>: dumps a zone in tinydns data format from database
 - zexport : commits the data to dns servers
 
+TBC
 
