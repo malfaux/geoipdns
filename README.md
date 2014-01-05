@@ -23,4 +23,17 @@ comes with inotify-tools package, then you have to remove -DSYS_INOTIFY from con
 using geoipdns
 =============
 
+setting up the backend
+----------------------
+
+geoipdns uses postgresql to host the zones. this is pretty much hardcoded inside the management scripts and i'm not planning changing anything from this point of view.
+postgresql is used only for data management. the data is exported in cdb format into the live service. the backend shouldn't | mustn't stay on the public dns servers.
+to set it up, run the following commands after postgresql is installed:
+
+    createuser -U postgres -DPRS geoipdns
+    createdb -U postgres -O geoipdns geoipdns
+    #geoipdns-schema.sql is located in the scripts directory
+    psql -U geoipdns geoipdns < geoipdns-schema.sql
+
+
 
