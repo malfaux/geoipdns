@@ -23,6 +23,30 @@ comes with inotify-tools package, then you have to remove -DSYS_INOTIFY from con
 using geoipdns
 =============
 
+software dependencies
+----------------------
+the following software packages must be installed as prerequisites for data management:
+- postgresql
+- perl
+- perl modules:
+    Data::Dumper
+    Data::Validate::Domain
+    Data::Validate::IP
+    DBI
+    Digest::MD5
+    File::Basename
+    IO::Uncompress::Unzip
+    JSON
+    JSON::XS
+    File::Basename
+    LWP::Simple
+    Number::Interval
+    Term::ReadLine
+    Text::CSV_XS
+    Tie::Handle::CSV
+    XML::Simple
+
+
 setting up the backend
 ----------------------
 
