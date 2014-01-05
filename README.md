@@ -1,5 +1,5 @@
 about geoipdns
---------------
+==============
 geoipdns started as a set of patches written to add functionality and improve speed of djbdns/tinydns.
 
 what has been modified over the years (I think I wrote it back in 2007 and continued to modify it until last year) is:
@@ -12,9 +12,9 @@ what has been modified over the years (I think I wrote it back in 2007 and conti
 
 
 compilation notes
------------------
+=================
 - by default, I assume to find inotify.h in sys/. If this isn't your case and your inotify support 
 comes with inotify-tools package, then you have to remove -DSYS_INOTIFY from conf-cc
 
 compilation flags
-================
+-----------------
