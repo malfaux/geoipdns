@@ -31,22 +31,22 @@ the following software packages must be installed as prerequisites for data mana
 - perl modules:
 
 
-    Data::Dumper
-    Data::Validate::Domain
-    Data::Validate::IP
-    DBI
-    Digest::MD5
-    File::Basename
-    IO::Uncompress::Unzip
-    JSON
-    JSON::XS
-    File::Basename
-    LWP::Simple
-    Number::Interval
-    Term::ReadLine
-    Text::CSV_XS
-    Tie::Handle::CSV
-    XML::Simple
+        Data::Dumper
+        Data::Validate::Domain
+        Data::Validate::IP
+        DBI
+        Digest::MD5
+        File::Basename
+        IO::Uncompress::Unzip
+        JSON
+        JSON::XS
+        File::Basename
+        LWP::Simple
+        Number::Interval
+        Term::ReadLine
+        Text::CSV_XS
+        Tie::Handle::CSV
+        XML::Simple
 
 
 setting up the backend
