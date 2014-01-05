@@ -7,7 +7,8 @@ backnet="10.4.41.0/30"
 frontface="eth0"
 
 vdnsd="/root/dev/vdns-1.0r10/vdns/vdnsd"
-rootdir=/var/service/ns30-53001/root
+vdnsd="vdnsd"
+rootdir="/data/dns"
 port=53
 buflen=$[1024*1024*128]
 ruid=nobody

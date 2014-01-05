@@ -6,3 +6,9 @@ if one needs so, please commit a clean patch and I'll happily accept it. I'm usi
 newer xtables-addons versions.
 
 p.s. the xtables source tree is already patched!
+
+
+how to use RAWNAT for load balancing
+------------------------------------
+
+there's a script called control2 in scripts folder. it's pretty readable and it contains the logic of (un)installing load balancing.
