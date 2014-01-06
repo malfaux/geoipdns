@@ -15,7 +15,7 @@ what has been modified over the years (I think I wrote it back in 2007 and conti
 
 **note** geoipdns dns support was added so I could have a firewall at DNS service level. While being ddosed there was no reason in taking the heat from other countries than the ones proving themselves to host worthy visitors. For example there are no real romanians reading newspapers from saudi arabia. Well maybe few but not millions, so screw the few, save the world.
 
-**note** geoipdns can be used to create a very simple, level-1 CDN implementation. you can route romanian visitors to a romanian server, english visitors to a britpop server and the rest of the world to bangladesh. however, do consider the case of dns caches like google. those are pushing geoipdns to decide on routing a request in a silly way. hence, consider it to be a level-1 CDN implementation and always have a level-2 "double-check" cdn in your web server.
+**note** geoipdns can be used to create a very simple, level-1 CDN implementation. you can route romanian visitors to a romanian server, english visitors to a britpop server and the rest of the world to bangladesh. however, do consider the case of dns caches like google. those are pushing geoipdns to decide on routing a request in a silly way. hence, consider it to be a level-1 CDN implementation and always have a level-2 "double-check" cdn in your web server. however, most of the visitors are using ISP caches so you have a pretty big chance to correctly map a request to the right server. this means (at least) less overhead for the visitor (e.g. no more redirecting the user's browser to the right server)
 
 
 installation notes
