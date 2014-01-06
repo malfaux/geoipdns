@@ -12,8 +12,11 @@ what has been modified over the years (I think I wrote it back in 2007 and conti
 - added a very messy data management set of scripts
 
 **note** geoipdns was always patched in a hurry, on a need-basis, most of the times *while being flooded* so the code looks dirty but *it proved itself very stable* over the years.
+
 **note** geoipdns dns support was added so I could have a firewall at DNS service level. While being ddosed there was no reason in taking the heat from other countries than the ones proving themselves to be worthy visitors. For example there are no real romanians reading newspapers from saudi arabia.
+
 **note** geoipdns can be used to create a very simple, level-1 CDN implementation. you can route romanian visitors to a romanian server, english visitors to a britpop server and the rest of the world to bangladesh. however, do consider the case of dns caches like google. those are pushing geoipdns to decide on routing a request in a silly way. hence, consider it to be a level-1 CDN implementation and always have a level-2 "double-check" cdn in your web server.
+
 
 installation notes
 =================
