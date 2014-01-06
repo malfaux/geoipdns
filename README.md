@@ -26,6 +26,8 @@ compilation
 -----------
 - by default, I assume to find inotify.h in sys/. If this isn't your case and your inotify support 
 comes with inotify-tools package, then you have to remove -DSYS_INOTIFY from conf-cc
+- go to src folder and type make and make install. this should produce in most of the cases two binaries, vdnsd and vdnsdb and install them in /usr/local/bin. hopefully, you'll forget about those and focus on using the startup/shutdown control script and data management scripts.
+
 
 using geoipdns
 =============
