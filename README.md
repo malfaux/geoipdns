@@ -1,6 +1,6 @@
 about geoipdns
 ==============
-geoipdns started as a set of patches written to add functionality and improve speed of djbdns/tinydns.
+geoipdns started as a set of patches written to add functionality and improve speed of djbdns/tinydns which was being used by [my employer](http://blockdos.net "BlockDOS"). This repository is here courtesy of [BlockDOS](http://blockdos.net "BlockDOS")
 
 what has been modified over the years (I think I wrote it back in 2007 and continued to modify it until last year) is:
 - added maxmind geoip support. I needed an easy way to filter ips at country level and implement now and then a very simple CDN system.
