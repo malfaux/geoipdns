@@ -21,6 +21,8 @@ what has been modified over the years (I think I wrote it back in 2007 and conti
 
 **note** geoipdns is not for the faint of the heart. use it only if you think this will help you mitigate some attacks but this means you will also have enough bandwidth and a good firewall in front of your server. if you're not a target, you surely want to use a fully rfc-compliant dns server. if you're a target but geoipdns is all that you have then go to an anti-ddos provider, like [BlockDOS](http://blockdos.net "BlockDOS").
 
+**note** there may be dragons. I had a very well defined path of managing the data (editing,exporting) from which I have never diverted meself. You may want to do the same.
+
 **note** finally, geoipdns compiles only on linux systems with inotify and epoll support and xtables enabled.
 
 
