@@ -60,6 +60,8 @@ to set it up, run the following commands after postgresql is installed:
     #geoipdns-schema.sql is located in the scripts directory
     psql -U geoipdns geoipdns < geoipdns-schema.sql
 
+edit the scripts/veridns/cfg.pm module and modify the paths as you like (defaults go to /var/db/geoipdns/{...}
+
 the following scripts are used to manage the data (the data will be edited in tinydns-data format):
 - gupdate : updates the geoip database and rebuilds the geoip configurations. usage: ./gupdate check=1 configs=all
 - gedit: edit the geoip mappings database
@@ -71,5 +73,48 @@ the following scripts are used to manage the data (the data will be edited in ti
 - zdump <zonename>: dumps a zone in tinydns data format from database
 - zexport : commits the data to dns servers
 
-TBC
+### multiuser support ####
+the backend management is somehow multiuser-aware through DNS_ADMIN environment variable. each user can host its own geoip configuration and 
+edit its own zone files. anyway, I did not really used this part so it should be considered buggy. the default user is 'admin' and I shall consider 
+single user environments in the documentation
+
+### geoip database configuration ######
+geoip databases are configured through xml files, hosted in /var/db/geoipdns/{admin}/ipmaps.xml. A xml file looks like this:
+
+    <ipmaps user="bdos" out="/sysami/.data/bdos/loc.data">
+    <!-- route the requests at dns level to the nearest/fastest
+    server. make an exception for an US ip class that should
+    go directly to Saudi Arabia server , bypassing the special_webcache.
+    another US ip class should go to egypt server.
+    -->
+        <map mname="saudi_smart_routing">
+            <mapit from="SA" to="saudi_server"/>
+            <mapit from="EG,AE" to="egypt_server"/>
+            <mapit from="US,UK" to="special_webcache"/>
+            <exceptions>
+            <except from="75.126.241.171/27" to="saudi_server"/>
+            <except from="74.86.118.75/27" to="egypt_server"/>
+            </exceptions>
+        </map>
+        <!-- allow access from Saudi Arabia ips only. the rest of the world is blacklisted  -->
+        <map mname="saudi_firewall">
+            <mapit from="SA" to="access_ok"/>
+        </map>
+        <map mname="saudi_uk_channel">
+            <mapit from="SA" to="saudi"/>
+            <mapit from="UK" to="england"/>
+        </map>
+        <map mname="saudi_pakistan_channel">
+            <mapit from="SA" to="saudi"/>
+            <mapit from="PK" to="pakistan"/>
+        </map>
+        <map mname="egypt_usa_channel">
+            <mapit from="EG" to="egypt"/>
+            <mapit from="US" to="united_states"/>
+        </map>
+        <map mname="emirates_romania_channel">
+            <mapit from="AE" to="emirates"/>
+            <mapit from="RO" to="romania"/>
+        </map>
+    </ipmaps>
 
