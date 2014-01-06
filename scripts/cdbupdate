@@ -1,0 +1,15 @@
+#!/bin/bash
+cmd=$1
+if [ "X"$cmd"X" = "XX" ] ; then echo 500 MISSING_COMMAND; exit 1; fi
+if [ "$cmd" = "commit" ]; then
+        if [ ! -f "/var/service/vdns/tmp/data.cdb" ]; then echo 400 COMMIT_FAILED_DATAFILENOTFOUND; exit 1; fi
+        mv /var/service/vdns/tmp/data.cdb /var/service/vdns/root/data.cdb
+        if [ $? -ne 0 ] ; then echo 500 COMMIT_FAILED ; exit 1; fi
+        echo 200 COMMIT_OK_COMMITED; exit 0;
+elif [ "$cmd" = "prepare" ]; then
+        gzip -dc | /var/service/vdns/bin/vdnsdb /var/service/vdns/tmp/data.tmp /var/service/vdns/tmp/data.cdb
+        if [ $? -ne 0 ] ; then echo 500 PREPARE_FAILED ; exit 1; fi
+        echo 200 PREPARE_OK_DONE; exit 0;
+else
+        echo 500 SYSTEM_UNKNOWN_COMMAND; exit 1;
+fi
