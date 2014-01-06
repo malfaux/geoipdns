@@ -101,15 +101,21 @@ if you don't need geoip database support then you can either:
 - ignore it. if a record is not geoip enabled then it's not. the rr defs are looking the same way as for tinydns
 - disable it at compile time. remove -DUSE_LOCMAPS flag from conf-cc and work with the above.
 
-geoip databases are configured through xml files, hosted in /var/db/geoipdns/{username}/ipmaps.xml. A xml file looks like this:
+geoip databases are configured through xml files, hosted in /var/db/geoipdns/{username}/ipmaps.xml. 
+a map has a name (mname) and a set of entries (mapit tags). *from* gives the country codes you want to map to an identifier given by "to" attribute.
+One can map multiple countries to the same map entry indentifier. Should an exception be created for an ip class belonging to a country (that is, map a single /X subnet from
+a country to another identifier), an exception can be defined like you may see below.
+
+A config file looks like this:
 
     <!-- define the owner of geoip db and the location where the compiled database will be hosted -->
     <ipmaps user="admin" out="/var/db/geoipdns/admin/loc.data">
-    <!-- route the requests at dns level to the nearest/fastest
-    server. make an exception for an US ip class that should
-    go directly to Saudi Arabia server , bypassing the special_webcache.
-    another US ip class should go to egypt server.
-    -->
+
+        <!-- route the requests at dns level to the nearest/fastest
+        server. make an exception for an US ip class that should
+        go directly to Saudi Arabia server , bypassing the special_webcache.
+        another US ip class should go to egypt server.
+        -->
         <map mname="saudi_smart_routing">
             <mapit from="SA" to="saudi_server"/>
             <mapit from="EG,AE" to="egypt_server"/>
@@ -142,5 +148,6 @@ geoip databases are configured through xml files, hosted in /var/db/geoipdns/{us
     </ipmaps>
 
 
+#### defining geoip-aware dns records ####
 
 

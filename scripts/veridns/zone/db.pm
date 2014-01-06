@@ -15,7 +15,8 @@ vdb_tr_cancel
 vdb_tr_end
 update_serial
 ));
-$ENV{DNS_ADMIN} = 'admin'
+
+$ENV{DNS_ADMIN} = 'admin' unless defined $ENV{DNS_ADMIN};
 
 use DBI;
 use veridns::cfg qw(:cf_);
