@@ -19,7 +19,10 @@ what has been modified over the years (I think I wrote it back in 2007 and conti
 
 **note** tcp support was also added in a hurry (in the order of minutes). we had a dns firewall which, when triggered, would send back truncated packets forcing tcp requests. tinydns/geoipdns had no tcp support so I had to add it really quick on the live systems. the patch is trivial. the processing flow is the same as for udp. if geoipdns can't read a full request at a time it will simply drop the connection, considering the case of webmasters receiving big payloads in requests as an exception. with tcp support geoipdns processing loop became asynchronous.
 
+**note** geoipdns is not for the faint of the heart. use it only if you think this will help you mitigate some attacks but this means you will also have enough bandwidth and a good firewall in front of your server. otherwise you surely want to use a fully rfc-compliant dns server.
+
 **note** finally, geoipdns compiles only on linux systems with inotify and epoll support and xtables enabled.
+
 
 
 installation notes
