@@ -17,6 +17,8 @@ what has been modified over the years (I think I wrote it back in 2007 and conti
 
 **note** geoipdns can be used to create a very simple, level-1 CDN implementation. you can route romanian visitors to a romanian server, english visitors to a britpop server and the rest of the world to bangladesh. however, do consider the case of dns caches like google. those are pushing geoipdns to decide on routing a request in a silly way. hence, consider it to be a level-1 CDN implementation and always have a level-2 "double-check" cdn in your web server. however, most of the visitors are using ISP caches so you have a pretty big chance to correctly map a request to the right server. this means (at least) less overhead for the visitor (e.g. no more redirecting the user's browser to the right server)
 
+**note** tcp support was also added in a hurry (in the order of minutes). we had a dns firewall which, when triggered, would send back truncated packets forcing tcp requests. tinydns/geoipdns had no tcp support so I had to add it really quickly on the live systems. the patch is trivial. the processing flow is the same as for udp. if geoipdns can't read a full request at a time it will simply drop the connection, considering the case of webmasters receiving big payloads in requests as an exception.
+
 
 installation notes
 =================
@@ -60,8 +62,8 @@ the following software packages must be installed as prerequisites for data mana
 setting up the backend
 ----------------------
 
-geoipdns uses postgresql to host the zones. this is pretty much hardcoded inside the management scripts and i'm not planning changing anything from this point of view.
-postgresql is used only for data management. the data is exported in cdb format into the live service. the backend shouldn't | mustn't stay on the public dns servers.
+geoipdns uses postgresql to host the zones. this is pretty much hardcoded inside the management scripts and i'm not planning to change anything from this point of view.
+postgresql is used only for data management. the data is exported in cdb format into the live service. the backend shouldn't (mustn't!) stay on the public dns servers.
 to set it up, run the following commands after postgresql is installed:
 
     createuser -U postgres -DPRS geoipdns
@@ -85,12 +87,12 @@ the following scripts are used to manage the data (the data will be edited in ti
 ### multiuser support ####
 the backend management is somehow multiuser-aware through DNS_ADMIN environment variable. each user can host its own geoip configuration and 
 edit its own zone files. anyway, I did not really used this part so it should be considered buggy. the default user is 'admin' and I shall consider 
-single user environments in the documentation
+single user environments in the documentation.
 
 ### geoip database configuration ######
 if you don't need geoip database support then you can either:
-- ignore it. if a record is not geoip enabled the it's not. the rr defs are looking the same way as for tinydns
-- disable it at compile time. remove -DUSE_LOCMAPS flag from conf-cc
+- ignore it. if a record is not geoip enabled then it's not. the rr defs are looking the same way as for tinydns
+- disable it at compile time. remove -DUSE_LOCMAPS flag from conf-cc and work with the above.
 
 geoip databases are configured through xml files, hosted in /var/db/geoipdns/{username}/ipmaps.xml. A xml file looks like this:
 
